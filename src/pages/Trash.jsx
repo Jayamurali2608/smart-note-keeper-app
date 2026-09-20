@@ -1,16 +1,19 @@
-import Navbar from "../components/Navbar";
 import { useState } from "react";
+import Navbar from "../components/Navbar";
+import "./Trash.css";
 
 function Trash() {
   const [trashNotes, setTrashNotes] = useState(
     JSON.parse(localStorage.getItem("trashNotes")) || []
   );
 
-  // Restore Note
+  // Restore note
   const handleRestore = (id) => {
     const noteToRestore = trashNotes.find(
       (note) => note.id === id
     );
+
+    if (!noteToRestore) return;
 
     const notes =
       JSON.parse(localStorage.getItem("notes")) || [];
@@ -34,8 +37,14 @@ function Trash() {
     );
   };
 
-  // Delete Permanently
+  // Delete permanently
   const handlePermanentDelete = (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to permanently delete this note?"
+    );
+
+    if (!confirmDelete) return;
+
     const updatedTrash = trashNotes.filter(
       (note) => note.id !== id
     );
@@ -48,92 +57,196 @@ function Trash() {
     );
   };
 
+  // Empty trash
+  const handleEmptyTrash = () => {
+    if (trashNotes.length === 0) return;
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to permanently delete all notes in Trash?"
+    );
+
+    if (!confirmDelete) return;
+
+    setTrashNotes([]);
+
+    localStorage.setItem(
+      "trashNotes",
+      JSON.stringify([])
+    );
+  };
+
   return (
-    <div style={{ display: "flex" }}>
+    <div className="trash-layout">
       <Navbar />
 
-      <div style={{ padding: "25px", width: "100%" }}>
-        <div
-  style={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "20px",
-  }}
->
-  <div>
-    <h1>Trash</h1>
-    <p>{trashNotes.length} Notes in Trash</p>
-  </div>
+      <main className="trash-page">
 
-  <button
-    onClick={() => {
-      setTrashNotes([]);
-      localStorage.setItem(
-        "trashNotes",
-        JSON.stringify([])
-      );
-    }}
-    style={{
-      backgroundColor: "red",
-      color: "white",
-      border: "none",
-      padding: "10px 15px",
-      borderRadius: "8px",
-    }}
-  >
-    🗑️ Empty Trash
-  </button>
-</div>
+        {/* Header */}
+        <section className="trash-header">
 
-        {trashNotes.length === 0 ? (
-          <p>No deleted notes found.</p>
-        ) : (
-          trashNotes.map((note) => (
-            <div
-              key={note.id}
-              style={{
-                border: "1px solid #ddd",
-                padding: "20px",
-                borderRadius: "15px",
-                marginTop: "20px",
-              }}
-            >
-              <h3>{note.title}</h3>
-              <p>{note.body}</p>
+          <div className="trash-header-content">
 
-              <button
-                onClick={() => handleRestore(note.id)}
-                style={{
-                  backgroundColor: "blue",
-                  marginRight: "15px",
-                  padding: "10px",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                }}
-              >
-                Restore
-              </button>
-
-              <button
-                onClick={() =>
-                  handlePermanentDelete(note.id)
-                }
-                style={{
-                  backgroundColor: "red",
-                  padding: "10px",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "8px",
-                }}
-              >
-                Delete Permanently
-              </button>
+            <div className="trash-badge">
+              <span></span>
+              RECENTLY DELETED
             </div>
-          ))
+
+            <h1>Trash</h1>
+
+            <p>
+              Deleted notes are kept here until you restore
+              them or permanently remove them.
+            </p>
+
+          </div>
+
+          <div className="trash-header-actions">
+
+            {trashNotes.length > 0 && (
+              <button
+                className="empty-trash-btn"
+                onClick={handleEmptyTrash}
+              >
+                <span>🗑️</span>
+                Empty Trash
+              </button>
+            )}
+
+          </div>
+
+        </section>
+
+        {/* Trash Summary */}
+        <section className="trash-summary">
+
+          <div className="trash-summary-item">
+
+            <div className="trash-summary-icon">
+              🗑️
+            </div>
+
+            <div>
+              <strong>{trashNotes.length}</strong>
+
+              <span>
+                {trashNotes.length === 1
+                  ? "Deleted Note"
+                  : "Deleted Notes"}
+              </span>
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* Deleted Notes */}
+        {trashNotes.length > 0 ? (
+
+          <section className="trash-notes-section">
+
+            <div className="trash-section-heading">
+
+              <div>
+                <h2>Deleted Notes</h2>
+
+                <p>
+                  Restore a note or permanently delete it.
+                </p>
+              </div>
+
+            </div>
+
+            <div className="trash-grid">
+
+              {trashNotes.map((note) => (
+
+                <article
+                  className="trash-note-card"
+                  key={note.id}
+                >
+
+                  <div className="trash-card-top">
+
+                    <div className="trash-note-icon">
+                      📝
+                    </div>
+
+                    <span className="deleted-label">
+                      DELETED
+                    </span>
+
+                  </div>
+
+                  <div className="trash-card-content">
+
+                    <h3>
+                      {note.title || "Untitled Note"}
+                    </h3>
+
+                    <p>
+                      {note.body || "No content available."}
+                    </p>
+
+                  </div>
+
+                  <div className="trash-card-actions">
+
+                    <button
+                      className="trash-restore-btn"
+                      onClick={() =>
+                        handleRestore(note.id)
+                      }
+                    >
+                      <span>↩</span>
+                      Restore
+                    </button>
+
+                    <button
+                      className="permanent-delete-btn"
+                      onClick={() =>
+                        handlePermanentDelete(note.id)
+                      }
+                    >
+                      <span>🗑️</span>
+                      Delete Permanently
+                    </button>
+
+                  </div>
+
+                </article>
+
+              ))}
+
+            </div>
+
+          </section>
+
+        ) : (
+
+          /* Empty Trash */
+          <section className="trash-empty">
+
+            <div className="trash-empty-icon">
+              🗑️
+            </div>
+
+            <span className="trash-empty-label">
+              ALL CLEAR
+            </span>
+
+            <h2>Trash is empty</h2>
+
+            <p>
+              Deleted notes will appear here.
+              You can restore them before permanently
+              deleting them.
+            </p>
+
+          </section>
+
         )}
-      </div>
+
+      </main>
     </div>
   );
 }

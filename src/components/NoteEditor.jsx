@@ -1,30 +1,59 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import { useNavigate, useLocation } from "react-router-dom";
+import "./NoteEditor.css";
+
 function NoteEditor() {
   const navigate = useNavigate();
   const location = useLocation();
+
   const editNote = location.state?.note;
-  const [title, setTitle] = useState(editNote?.title || "");
-  const [content, setContent] = useState(editNote?.body || "");
+
+  const [title, setTitle] = useState(
+    editNote?.title || ""
+  );
+
+  const [content, setContent] = useState(
+    editNote?.body || ""
+  );
+
   const [notebook, setNotebook] = useState(
-  editNote?.notebook || ""
+    editNote?.notebook || ""
   );
-const [tag, setTag] = useState(
-editNote?.tag || ""
+
+  const [tag, setTag] = useState(
+    Array.isArray(editNote?.tag)
+      ? editNote.tag.join(", ")
+      : editNote?.tag || ""
   );
- const handleSave = () => {
- const oldNotes =
- JSON.parse(localStorage.getItem("notes")) || [];
-   let updatedNotes;
- if (editNote) {
-    updatedNotes = oldNotes.map((note) =>
-      note.id === editNote.id?{
+
+  // LOAD NOTEBOOKS CREATED FROM NOTEBOOK PAGE
+  const [notebooks] = useState(() => {
+    return (
+      JSON.parse(
+        localStorage.getItem("notebooks")
+      ) || []
+    );
+  });
+
+  const handleSave = () => {
+    const oldNotes =
+      JSON.parse(localStorage.getItem("notes")) || [];
+
+    let updatedNotes;
+
+    if (editNote) {
+      updatedNotes = oldNotes.map((note) =>
+        note.id === editNote.id
+          ? {
               ...note,
               title: title,
               body: content,
               notebook: notebook,
-              tag: tag.split(",").map(t=>t.trim()),
+              tag: tag
+                .split(",")
+                .map((t) => t.trim())
+                .filter(Boolean),
               updatedAt: new Date(),
             }
           : note
@@ -35,14 +64,19 @@ editNote?.tag || ""
         title: title,
         body: content,
         notebook: notebook,
-        tag: tag.split(",").map(t=>t.trim()),
+        tag: tag
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean),
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
       updatedNotes = [...oldNotes, newNote];
     }
-    console.log("UPDATED NOTES:",updatedNotes);
+
+    console.log("UPDATED NOTES:", updatedNotes);
+
     localStorage.setItem(
       "notes",
       JSON.stringify(updatedNotes)
@@ -53,113 +87,221 @@ editNote?.tag || ""
   };
 
   return (
-    <div style={{ display: "flex" }}>
+    <div className="editor-layout">
       <Navbar />
 
-      <div style={{ flex: 1, padding: "20px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginBottom: "20px",
-            gap: "10px",
-          }}
-        >
-          <button
-            onClick={() => navigate("/notes")}
-            style={{
-              backgroundColor: "#4F46E5",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "8px",
-            }}
-          >
-            Done
-          </button>
+      <main className="note-editor-page">
+
+        {/* TOP BAR */}
+
+        <div className="editor-topbar">
 
           <button
-            onClick={handleSave}
-            style={{
-              backgroundColor: "#4f46e5",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "8px",
-            }}
+            className="back-btn"
+            onClick={() => navigate("/notes")}
           >
-            Save Note
+            ← <span>All Notes</span>
           </button>
+
+          <div className="editor-actions">
+
+            <button
+              className="cancel-btn"
+              onClick={() => navigate("/notes")}
+            >
+              Cancel
+            </button>
+
+            <button
+              className="save-btn"
+              onClick={handleSave}
+            >
+              Save Note
+            </button>
+
+            <button
+              className="done-btn"
+              onClick={handleSave}
+            >
+              Done
+            </button>
+
+          </div>
+
         </div>
 
-        <input
-          type="text"
-          placeholder="Note title..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginBottom: "20px",
-          }}
-        />
+        {/* EDITOR CONTENT */}
 
-        <textarea
-          placeholder="Start writing your note..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          style={{
-            width: "100%",
-            height: "350px",
-            padding: "10px",
-          }}
-        />
+        <div className="editor-content">
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: "20px",
-          }}
-        >
-          {/* TAGS */}
-          <div>
-            <p>🏷️ Tags</p>
+          <div className="editor-heading">
+
+            <span className="editor-label">
+              {editNote ? "EDIT NOTE" : "NEW NOTE"}
+            </span>
+
+            <h1>
+              {editNote
+                ? "Edit your note"
+                : "Create a new note"}
+            </h1>
+
+            <p>
+              Write down your thoughts, ideas and
+              everything you want to remember.
+            </p>
+
+          </div>
+
+          {/* TITLE */}
+
+          <div className="title-section">
 
             <input
               type="text"
-              placeholder="Add tag..."
-              value={tag}
-              onChange={(e) => setTag(e.target.value)}
-            />
-          </div>
-
-          {/* NOTEBOOK */}
-          <div>
-            <p>📚 Notebook</p>
-
-            <select
-              value={notebook}
+              className="note-title-input"
+              placeholder="Untitled Note"
+              value={title}
               onChange={(e) =>
-                setNotebook(e.target.value)
+                setTitle(e.target.value)
               }
-            >
-              <option value="">
-                Select notebook
-              </option>
-              <option value="Personal">
-                Personal
-              </option>
-              <option value="Work">
-                Work
-              </option>
-              <option value="Study">
-                Study
-              </option>
-            </select>
+            />
+
           </div>
+
+          {/* WRITING AREA */}
+
+          <div className="writing-card">
+
+            <div className="writing-header">
+
+              <span>📝</span>
+
+              <span className="writing-label">
+                Note Content
+              </span>
+
+            </div>
+
+            <textarea
+              className="note-content-input"
+              placeholder="Start writing your note here..."
+              value={content}
+              onChange={(e) =>
+                setContent(e.target.value)
+              }
+            />
+
+            <div className="writing-footer">
+
+              <span>
+                {content.length} characters
+              </span>
+
+              <span>
+                Auto saved locally
+              </span>
+
+            </div>
+
+          </div>
+
+          {/* OPTIONS */}
+
+          <div className="note-options">
+
+            {/* TAGS */}
+
+            <div className="option-card">
+
+              <div className="option-title">
+
+                <div className="option-icon tag-icon">
+                  🏷️
+                </div>
+
+                <div>
+
+                  <h3>Tags</h3>
+
+                  <p>
+                    Add tags to organize your note
+                  </p>
+
+                </div>
+
+              </div>
+
+              <input
+                type="text"
+                className="option-input"
+                placeholder="e.g. Work, Study, Ideas"
+                value={tag}
+                onChange={(e) =>
+                  setTag(e.target.value)
+                }
+              />
+
+              <small>
+                Separate multiple tags with commas
+              </small>
+
+            </div>
+
+            {/* NOTEBOOK */}
+
+            <div className="option-card">
+
+              <div className="option-title">
+
+                <div className="option-icon notebook-icon">
+                  📚
+                </div>
+
+                <div>
+
+                  <h3>Notebook</h3>
+
+                  <p>
+                    Choose where to keep this note
+                  </p>
+
+                </div>
+
+              </div>
+
+              <select
+                className="option-select"
+                value={notebook}
+                onChange={(e) =>
+                  setNotebook(e.target.value)
+                }
+              >
+
+                <option value="">
+                  Select notebook
+                </option>
+
+                {notebooks.map(
+                  (notebookName, index) => (
+                    <option
+                      key={index}
+                      value={notebookName}
+                    >
+                      {notebookName}
+                    </option>
+                  )
+                )}
+
+              </select>
+
+            </div>
+
+          </div>
+
         </div>
-      </div>
+
+      </main>
     </div>
   );
 }

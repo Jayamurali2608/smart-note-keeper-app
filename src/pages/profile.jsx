@@ -1,107 +1,548 @@
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import AboutSection from "../components/AboutSection";
-function Profile() {
-  const user=JSON.parse(localStorage.getItem("user")) ||{};
-  const notes =
-    JSON.parse(localStorage.getItem("notes")) || [];
-  const totalNotes = notes.length;
-  const totalTags = [
-    ...new Set(notes.map((note) => note.tag))
-  ].filter(Boolean).length;
+import "./Profile.css";
 
-  const totalNotebooks = [
-    ...new Set(notes.map((note) => note.notebook))
-  ].filter(Boolean).length;
+function Profile() {
+  const [user, setUser] = useState(null);
+
+  const [notesCount, setNotesCount] = useState(0);
+  const [notebooksCount, setNotebooksCount] = useState(0);
+  const [tagsCount, setTagsCount] = useState(0);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    const notes =
+      JSON.parse(localStorage.getItem("notes")) || [];
+
+    setNotesCount(notes.length);
+
+    // NOTEBOOK COUNT
+    const notebooks =
+      JSON.parse(localStorage.getItem("notebooks")) || [];
+
+    setNotebooksCount(notebooks.length);
+
+    // TAG COUNT
+    const uniqueTags = new Set();
+
+    notes.forEach((note) => {
+      if (Array.isArray(note.tag)) {
+        note.tag.forEach((tag) => {
+          if (tag) {
+            uniqueTags.add(tag.trim());
+          }
+        });
+      } else if (note.tag) {
+        uniqueTags.add(note.tag.trim());
+      }
+    });
+
+    setTagsCount(uniqueTags.size);
+
+    fetch("http://localhost:5000/api/auth/me", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        if (data.user) {
+          setUser(data.user);
+          setName(data.user.name || "");
+          setEmail(data.user.email || "");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // EDIT PROFILE
+  const handleEdit = () => {
+    setName(user?.name || "");
+    setEmail(user?.email || "");
+    setIsEditing(true);
+  };
+
+  // CANCEL EDIT
+  const handleCancel = () => {
+    setName(user?.name || "");
+    setEmail(user?.email || "");
+    setIsEditing(false);
+  };
+
+  // SAVE PROFILE
+  const handleSave = () => {
+    if (!name.trim() || !email.trim()) {
+      alert("Please enter both name and email.");
+      return;
+    }
+
+    setUser({
+      ...user,
+      name: name,
+      email: email,
+    });
+
+    setIsEditing(false);
+
+    alert("Profile updated successfully!");
+  };
+
+  // LOGOUT
+  const handleLogout = () => {
+    const confirmLogout = window.confirm(
+      "Are you sure you want to logout?"
+    );
+
+    if (!confirmLogout) return;
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.href =
+      "/smart-note-keeper-app/login";
+  };
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+
       <Navbar />
 
-      <div
+      <main
         style={{
-          width: "100%",
-          padding: "30px",
-          backgroundColor: "#f5f7fb",
+          flex: 1,
+          padding: "35px",
+          background: "#f5f7fb",
           minHeight: "100vh",
+          boxSizing: "border-box",
         }}
       >
-        {/* PROFILE CARD */}
-        <div
+
+        <h1
           style={{
-            background: "white",
-            padding: "30px",
-            borderRadius: "15px",
+            color: "#1e3a8a",
             textAlign: "center",
-            maxWidth: "500px",
-            margin: "auto",
+            marginBottom: "15px",
           }}
         >
-          {/* PROFILE ICON */}
+          My Profile
+        </h1>
+
+        <p
+          style={{
+            color: "#64748b",
+            textAlign: "center",
+            marginTop: "25px",
+            marginBottom: "25px",
+          }}
+        >
+          Manage your SmartNotes account
+        </p>
+
+        <div
+          style={{
+            maxWidth: "850px",
+            margin: "25px auto",
+            background: "white",
+            padding: "30px",
+            borderRadius: "20px",
+            boxShadow:
+              "0 10px 30px rgba(0,0,0,0.08)",
+          }}
+        >
+
           <div
             style={{
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              backgroundColor: "#4f46e5",
-              color: "white",
-              fontSize: "60px",
               display: "flex",
-              justifyContent: "center",
+              flexDirection: "column",
               alignItems: "center",
-              margin: "auto",
+              textAlign: "center",
+              gap: "15px",
             }}
           >
-            👤
+
+            <div
+              style={{
+                width: "85px",
+                height: "85px",
+                borderRadius: "50%",
+                background:
+                  "linear-gradient(135deg,#2563eb,#4f46e5)",
+                color: "white",
+                fontSize: "38px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              👤
+            </div>
+
+            <div>
+
+              <h2
+                style={{
+                  margin: "0 0 8px",
+                  color: "#1e293b",
+                }}
+              >
+                {user?.name || "Loading..."}
+              </h2>
+
+              <p
+                style={{
+                  margin: "5px 0",
+                  color: "#64748b",
+                }}
+              >
+                ✉️ {user?.email || "Loading..."}
+              </p>
+
+              <span
+                style={{
+                  display: "inline-block",
+                  marginTop: "8px",
+                  padding: "5px 12px",
+                  borderRadius: "20px",
+                  background: "#dcfce7",
+                  color: "#15803d",
+                  fontSize: "12px",
+                  fontWeight: "600",
+                }}
+              >
+                ✓ Active Account
+              </span>
+
+            </div>
+
           </div>
 
-          <h2>{user.name||"guest user"}</h2>
-          <p>{user.email ||"No Email"}</p>
-
-          {/* EDIT BUTTON */}
-          <button
-            style={{
-              backgroundColor: "#4f46e5",
-              color: "white",
-              border: "none",
-              padding: "10px 20px",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
-          >
-            Edit Profile
-          </button>
-
-          {/* STATS */}
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-around",
+              display: "grid",
+              gridTemplateColumns:
+                "repeat(3, 1fr)",
+              gap: "15px",
               marginTop: "30px",
             }}
           >
-            <div>
-              <h3>{totalNotes}</h3>
-              <p>Notes</p>
+
+            {/* TOTAL NOTES */}
+            <div
+              style={{
+                padding: "20px",
+                textAlign: "center",
+                background: "#f8fafc",
+                borderRadius: "12px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div>📝</div>
+
+              <h3>{notesCount}</h3>
+              <p>Total Notes</p>
             </div>
 
-            <div>
-              <h3>{totalNotebooks}</h3>
+            {/* NOTEBOOKS */}
+            <div
+              style={{
+                padding: "20px",
+                textAlign: "center",
+                background: "#f8fafc",
+                borderRadius: "12px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div>📚</div>
+
+              <h3>{notebooksCount}</h3>
+
               <p>Notebooks</p>
             </div>
 
-            <div>
-              <h3>{totalTags}</h3>
+            {/* TAGS */}
+            <div
+              style={{
+                padding: "20px",
+                textAlign: "center",
+                background: "#f8fafc",
+                borderRadius: "12px",
+                border: "1px solid #e2e8f0",
+              }}
+            >
+              <div>🏷️</div>
+
+              <h3>{tagsCount}</h3>
+
               <p>Tags</p>
             </div>
+
           </div>
+
         </div>
 
-        {/* 👇 ABOUT SECTION (BOTTOM) */}
-        <div style={{ marginTop: "20px" }}>
-          <AboutSection />
+        {/* ACCOUNT INFORMATION */}
+
+        <div
+          style={{
+            maxWidth: "850px",
+            margin: "25px auto",
+            background: "white",
+            padding: "30px",
+            borderRadius: "20px",
+            boxShadow:
+              "0 10px 30px rgba(0,0,0,0.06)",
+          }}
+        >
+
+          <h2
+            style={{
+              color: "#1e3a8a",
+              marginTop: 0,
+            }}
+          >
+            Account Information
+          </h2>
+
+          {isEditing ? (
+
+            <div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "8px",
+                    fontWeight: "600",
+                    color: "#334155",
+                  }}
+                >
+                  👤 Full Name
+                </label>
+
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) =>
+                    setName(e.target.value)
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: "10px",
+                    fontSize: "15px",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "8px",
+                    fontWeight: "600",
+                    color: "#334155",
+                  }}
+                >
+                  ✉️ Email Address
+                </label>
+
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) =>
+                    setEmail(e.target.value)
+                  }
+                  style={{
+                    width: "100%",
+                    padding: "12px",
+                    border: "1px solid #cbd5e1",
+                    borderRadius: "10px",
+                    fontSize: "15px",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: "12px",
+                  justifyContent: "flex-end",
+                  marginTop: "25px",
+                }}
+              >
+
+                <button
+                  onClick={handleCancel}
+                  style={{
+                    padding: "11px 24px",
+                    background: "#e2e8f0",
+                    color: "#334155",
+                    border: "none",
+                    borderRadius: "10px",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={handleSave}
+                  style={{
+                    padding: "11px 24px",
+                    background: "#2563eb",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "10px",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  💾 Save Changes
+                </button>
+
+              </div>
+
+            </div>
+
+          ) : (
+
+            <div>
+
+              <div
+                style={{
+                  padding: "15px 0",
+                  borderBottom:
+                    "1px solid #e2e8f0",
+                  display: "flex",
+                  justifyContent:
+                    "space-between",
+                }}
+              >
+                <span>👤 Full Name</span>
+
+                <strong>
+                  {user?.name || "Loading..."}
+                </strong>
+              </div>
+
+              <div
+                style={{
+                  padding: "15px 0",
+                  borderBottom:
+                    "1px solid #e2e8f0",
+                  display: "flex",
+                  justifyContent:
+                    "space-between",
+                }}
+              >
+                <span>✉️ Email Address</span>
+
+                <strong>
+                  {user?.email || "Loading..."}
+                </strong>
+              </div>
+
+              <div
+                style={{
+                  padding: "15px 0",
+                  borderBottom:
+                    "1px solid #e2e8f0",
+                  display: "flex",
+                  justifyContent:
+                    "space-between",
+                }}
+              >
+                <span>🔐 Security</span>
+
+                <strong>
+                  Password Protected
+                </strong>
+              </div>
+
+              <div
+                style={{
+                  padding: "15px 0",
+                  display: "flex",
+                  justifyContent:
+                    "space-between",
+                }}
+              >
+                <span>✨ Status</span>
+
+                <strong>
+                  Active
+                </strong>
+              </div>
+
+              <div
+                style={{
+                  marginTop: "25px",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "12px",
+                }}
+              >
+
+                <button
+                  onClick={handleEdit}
+                  style={{
+                    padding: "12px 25px",
+                    background: "#2563eb",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "10px",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  ✏️ Edit Profile
+                </button>
+
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    padding: "12px 25px",
+                    background: "#dc2626",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "10px",
+                    fontSize: "15px",
+                    fontWeight: "600",
+                    cursor: "pointer",
+                  }}
+                >
+                  🚪 Logout
+                </button>
+
+              </div>
+
+            </div>
+
+          )}
+
         </div>
 
-      </div>
+      </main>
+
     </div>
   );
 }

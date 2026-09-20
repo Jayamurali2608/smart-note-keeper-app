@@ -1,98 +1,204 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const savedUser = JSON.parse(localStorage.getItem("user"));
+  const handleLogin = async (e) => {
+  e.preventDefault();
 
-    if (
-      savedUser &&
-      savedUser.email === email &&
-      savedUser.password === password
-    ) {
+  try {
+    const response = await fetch(
+      "http://localhost:5000/api/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      localStorage.setItem("token", data.token);
+
+      alert("Login successful");
+
       navigate("/profile");
     } else {
-      alert("Invalid login");
+      alert(data.message || "Invalid login");
     }
-  };
-
+  } catch (error) {
+    console.error("Login Error:", error);
+    alert("Cannot connect to backend server");
+  }
+};
+ 
   return (
-    <div style={styles.container}>
-      <form onSubmit={handleLogin} style={styles.card}>
-        <h2 style={{ fontSize: "22px", textAlign: "center" }}>
-          Login
-        </h2>
+    <div className="login-page">
 
-        <input
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      {/* Background Design */}
+      <div className="bg-circle circle-one"></div>
+      <div className="bg-circle circle-two"></div>
+      <div className="bg-circle circle-three"></div>
 
-        <input
-          style={styles.input}
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+      <div className="login-card">
 
-        <button
-          type="submit"
-          style={{
-            backgroundColor: "#4f46e5",
-            color: "white",
-            border: "none",
-            padding: "10px 18px",
-            borderRadius: "10px",
-            cursor: "pointer",
-            marginTop: "10px",
-            fontSize: "16px",
-          }}
-        >
-          Login
-        </button>
+        {/* Profile Icon */}
+        <div className="profile-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M5 20c.8-3.2 3.2-5 7-5s6.2 1.8 7 5" />
+          </svg>
+        </div>
 
-        <p>
-          Don't have account?{" "}
-          <Link to="/signup">Signup</Link>
+
+        {/* Smart Note Keeper */}
+        <div className="login-brand">
+
+          <span className="brand-line"></span>
+
+          <div className="brand-note">
+            <div></div>
+            <div></div>
+            <div className="small-line"></div>
+          </div>
+
+          <h2>Smart Note Keeper</h2>
+
+          <span className="brand-sparkle">✦</span>
+
+          <span className="brand-line"></span>
+
+        </div>
+
+
+        {/* Welcome */}
+        <h1>Welcome Back</h1>
+
+        <p className="login-subtitle">
+          Sign in to access your notes
         </p>
-      </form>
+
+
+        <form onSubmit={handleLogin}>
+
+          {/* Email */}
+          <div className="input-group">
+
+            <label>Email Address</label>
+
+            <div className="input-box">
+
+              <svg viewBox="0 0 24 24">
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                />
+                <path d="m3 7 9 6 9-6" />
+              </svg>
+
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+
+            </div>
+          </div>
+
+
+          {/* Password */}
+          <div className="input-group">
+
+            <div className="password-top">
+
+              <label>Password</label>
+
+              <Link to="/forgot-password">
+                Forgot password?
+              </Link>
+
+            </div>
+
+
+            <div className="input-box">
+
+              <svg viewBox="0 0 24 24">
+                <rect
+                  x="5"
+                  y="10"
+                  width="14"
+                  height="10"
+                  rx="2"
+                />
+
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+              </svg>
+
+
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+
+
+              {/* Show / Hide Password */}
+              <button
+                type="button"
+                className="eye-button"
+                onClick={() =>
+                  setShowPassword(!showPassword)
+                }
+              >
+                {showPassword ? "◉" : "○"}
+              </button>
+
+            </div>
+          </div>
+
+
+          {/* Login Button */}
+          <button
+            type="submit"
+            className="login-button"
+          >
+            SIGN IN
+          </button>
+
+        </form>
+
+
+        {/* Signup */}
+        <p className="signup-text">
+          Don't have an account?{" "}
+
+          <Link to="/signup">
+            Create Account
+          </Link>
+        </p>
+
+      </div>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    height: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f2f2f2",
-  },
-  card: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-    padding: "30px",
-    background: "white",
-    borderRadius: "10px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    width: "300px",
-  },
-  input: {
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-  },
-};
 
 export default Login;

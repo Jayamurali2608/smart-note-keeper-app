@@ -1,0 +1,458 @@
+.archive-layout {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.archive-page {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 28px 6%;
+}
+
+/* =========================
+   Header
+========================= */
+
+.archive-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 15px 5px 20px;
+  margin-bottom: 18px;
+}
+
+.archive-header-content {
+  text-align: left;
+}
+
+.archive-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.archive-header h1 {
+  margin: 10px 0 4px;
+  color: var(--text-h);
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.archive-header p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================
+   Empty Archive Button
+========================= */
+
+.empty-archive-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px 17px;
+  border: none;
+  border-radius: 10px;
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.18);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.empty-archive-btn:hover {
+  background: #b91c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.25);
+}
+
+/* =========================
+   Summary
+========================= */
+
+.archive-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 22px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+
+.archive-summary-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+}
+
+.archive-summary-icon {
+  width: 32px;
+  height:32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--accent-bg);
+  font-size: 15px;
+}
+
+.archive-summary-item strong {
+  display: block;
+  color: var(--text-h);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.archive-summary-item span {
+  display: block;
+  margin-top: 1px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* =========================
+   Notes Section
+========================= */
+
+.archive-notes-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+
+/* =========================
+   Section Heading
+========================= */
+
+.archive-section-heading {
+  margin-bottom: 16px;
+}
+
+.archive-section-heading h2 {
+  margin: 0;
+  color: var(--text-h);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.archive-section-heading p {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* =========================
+   Notes Grid
+========================= */
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+/* =========================
+   Note Card
+========================= */
+
+.archive-note-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 245px;
+  padding: 19px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.archive-note-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+/* =========================
+   Card Top
+========================= */
+
+.archive-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.archive-note-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--accent-bg);
+  font-size: 15px;
+}
+
+.archived-label {
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: var(--accent-bg);
+  color: var(--text-secondary);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+/* =========================
+   Card Content
+========================= */
+
+.archive-card-content {
+  flex: 1;
+}
+
+.archive-card-content h3 {
+  margin: 0 0 8px;
+  color: var(--text-h);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.archive-card-content p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.65;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* =========================
+   Card Actions
+========================= */
+
+.archive-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.restore-btn,
+.archive-delete-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.restore-btn {
+  border: 1px solid #c7d2fe;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.restore-btn:hover {
+  background: var(--accent-bg);
+  transform: translateY(-1px);
+}
+
+.archive-delete-btn {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.archive-delete-btn:hover {
+  background: #fee2e2;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   Empty State
+========================= */
+
+.archive-empty {
+  text-align: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 55px 25px;
+  box-shadow: var(--shadow);
+}
+
+.archive-empty-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: var(--accent-bg);
+  font-size: 31px;
+}
+
+.archive-empty-label {
+  display: inline-block;
+  margin-bottom: 7px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+}
+
+.archive-empty h2 {
+  margin: 0 0 7px;
+  color: var(--text-h);
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.archive-empty p {
+  max-width: 450px;
+  margin: 0 auto;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 1050px) {
+  .archive-page {
+    padding: 25px 4%;
+  }
+
+  .archive-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 650px) {
+  .archive-page {
+    padding: 20px 15px;
+  }
+
+  .archive-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px 10px 16px;
+  }
+
+  .archive-header-content {
+    text-align: center;
+  }
+
+  .archive-header h1 {
+    font-size: 28px;
+  }
+
+  .archive-header p {
+    font-size: 13px;
+  }
+
+  .empty-archive-btn {
+    width: 100%;
+    max-width: 220px;
+  }
+
+  .archive-summary {
+    padding: 13px;
+  }
+
+  .archive-notes-section {
+    padding: 17px 13px;
+  }
+
+  .archive-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .archive-note-card {
+    min-height: 220px;
+  }
+}
+
+/* =========================
+   Small Mobile
+========================= */
+
+@media (max-width: 400px) {
+  .archive-page {
+    padding: 18px 12px;
+  }
+
+  .archive-header h1 {
+    font-size: 26px;
+  }
+
+  .archive-header p {
+    font-size: 12px;
+  }
+
+  .archive-note-card {
+    padding: 16px;
+  }
+
+  .archive-card-actions {
+    flex-direction: column;
+  }
+
+  .restore-btn,
+  .archive-delete-btn {
+    width: 100%;
+  }
+}

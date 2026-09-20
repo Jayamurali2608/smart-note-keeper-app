@@ -1,0 +1,295 @@
+* {
+  box-sizing: border-box;
+}
+
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9ff;
+  color: #1f2937;
+  transition: 0.3s ease;
+}
+
+/* Header */
+
+.landing-header {
+  width: 100%;
+  padding: 22px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.landing-logo {
+  font-size: 28px;
+  font-weight: 700;
+  color: #4f46e5;
+}
+
+.landing-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.landing-nav a {
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+}
+
+/* Theme Button */
+
+.theme-toggle {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.get-started {
+  background: #4f46e5;
+  color: white !important;
+  padding: 11px 22px;
+  border-radius: 8px;
+}
+
+/* Hero */
+
+.landing-hero {
+  flex: 1;
+  text-align: center;
+  padding: 70px 40px 50px;
+}
+
+.landing-hero h1 {
+  font-size: 46px;
+  margin-bottom: 18px;
+  color: #111827;
+}
+
+.landing-hero h2 {
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: #374151;
+}
+
+.landing-hero > p {
+  max-width: 650px;
+  margin: 0 auto 30px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+/* Buttons */
+
+.landing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 55px;
+}
+
+.landing-buttons a {
+  text-decoration: none;
+  padding: 13px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.start-free {
+  background: #4f46e5;
+  color: white;
+}
+
+.landing-login {
+  background: white;
+  color: #4f46e5;
+  border: 1px solid #4f46e5;
+}
+
+/* Feature Boxes */
+
+.feature-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-box {
+  flex: 1;
+  min-height: 185px;
+  padding: 28px 20px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+.feature-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.feature-box h3 {
+  margin: 8px 0;
+  font-size: 20px;
+}
+
+.feature-box p {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.feature-box {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.feature-box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer */
+
+.landing-footer {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* DARK MODE */
+
+.landing-page.dark-mode {
+  background: #111827;
+  color: #f9fafb;
+}
+
+.dark-mode .landing-header {
+  background: #1f2937;
+  border-bottom-color: #374151;
+}
+
+.dark-mode .landing-nav a {
+  color: #f3f4f6;
+}
+
+.dark-mode .landing-hero h1 {
+  color: #ffffff;
+}
+
+.dark-mode .landing-hero h2 {
+  color: #e5e7eb;
+}
+
+.dark-mode .landing-hero > p {
+  color: #cbd5e1;
+}
+
+.dark-mode .landing-login {
+  background: #1f2937;
+  color: #a5b4fc;
+}
+
+.dark-mode .feature-box {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.dark-mode .feature-box p {
+  color: #cbd5e1;
+}
+
+.dark-mode .landing-footer {
+  color: #9ca3af;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .feature-container {
+    flex-wrap: wrap;
+  }
+
+  .feature-box {
+    flex: 1 1 45%;
+  }
+}
+
+@media (max-width: 600px) {
+  .landing-header {
+    padding: 18px 20px;
+  }
+
+  .landing-logo {
+    font-size: 22px;
+  }
+
+  .landing-nav {
+    gap: 10px;
+  }
+
+  .landing-hero {
+    padding: 50px 20px 30px;
+  }
+
+  .landing-hero h1 {
+    font-size: 32px;
+  }
+
+  .landing-hero h2 {
+    font-size: 22px;
+  }
+
+  .feature-container {
+    flex-direction: column;
+  }
+
+  .feature-box {
+    flex: none;
+    width: 100%;
+  }
+}
+/* Button Hover Effects */
+
+.get-started,
+.start-free,
+.landing-login {
+  transition: all 0.3s ease;
+}
+
+.get-started:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.3);
+}
+
+.start-free:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.3);
+}
+
+.landing-login:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.2);
+}
+
+/* Theme Button Hover */
+
+.theme-toggle {
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.2);
+}
