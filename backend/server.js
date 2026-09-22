@@ -16,7 +16,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://smartnotes-frontend-741b.onrender.com",
   })
 );
 const limiter = rateLimit({
@@ -30,7 +30,6 @@ const limiter = rateLimit({
 
 app.use(limiter);
 app.use(express.json());
-
 app.use("/api/auth", authRoutes);
 app.use("/api/notes/search", searchRoutes);
 app.use("/api/tags", tagRoutes);
