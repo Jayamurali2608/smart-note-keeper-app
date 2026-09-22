@@ -10,7 +10,7 @@ const {
   togglePin,
 } = require("../controllers/NoteController");
 
-const authMiddleware = require("../middleware/Authmiddleware");
+const authMiddleware = require("../middleware/authMiddleware");
 
 
 // Create Note
