@@ -20,7 +20,7 @@ function App() {
     document.documentElement.setAttribute("data-theme",savedTheme);
   },[]);
   return (
-    <BrowserRouter basename="/smart-note-keeper-app">
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
