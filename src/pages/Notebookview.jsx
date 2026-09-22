@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./NotebookView.css";
+import "./Notebookview.css";
 
 function NotebookView() {
   const navigate = useNavigate();
