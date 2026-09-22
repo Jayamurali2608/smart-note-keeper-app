@@ -13,10 +13,14 @@ const archiveRoutes = require("./routes/archiveRoutes");
 dotenv.config();
 const app = express();
 connectDB();
-
 app.use(
   cors({
-    origin: "https://smartnotes-frontend-741b.onrender.com",
+    origin: [
+      "http://localhost:5173",
+      "https://smartnotes-frontend-741b.onrender.com",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 const limiter = rateLimit({
