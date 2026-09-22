@@ -46,7 +46,7 @@ function Profile() {
 
     setTagsCount(uniqueTags.size);
 
-    fetch("http://localhost:5000/api/auth/me", {
+    fetch("https://smartnotes-backend-0ns8.onrender.com/api/auth/me", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
