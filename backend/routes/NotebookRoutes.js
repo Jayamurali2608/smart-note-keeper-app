@@ -6,7 +6,7 @@ const {
   getNotebooks,
   updateNotebook,
   deleteNotebook,
-} = require("../Controllers/NotebookController");
+} = require("../controllers/NotebookController");
 
 const authMiddleware = require("../middleware/authMiddleware");
 
