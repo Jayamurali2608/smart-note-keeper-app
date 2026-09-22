@@ -7,7 +7,7 @@ import Signup from "./pages/Signup";
 import AllNotes from "./pages/AllNotes";
 import Tags from "./pages/Tags";
 import Trash from "./pages/Trash";
-import NotebookView from "./pages/NotebookView";
+import NotebookView from "./pages/Notebookview";
 import Settings from "./pages/Settings";
 import NoteDetail from "./components/NoteDetail";
 import Archive from "./pages/Archive";
